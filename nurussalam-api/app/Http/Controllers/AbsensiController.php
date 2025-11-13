@@ -7,12 +7,31 @@ use Illuminate\Http\Request;
 
 class AbsensiController extends Controller
 {
+    // public function store(Request $request)
+    // {
+    //     foreach ($request->absensi as $item) {
+    //         Absensi::updateOrCreate(
+    //             [
+    //                 'santri_id' => $item['santri_id'],
+    //                 'jadwal_id' => $item['jadwal_id'],
+    //                 'tanggal' => date('Y-m-d'),
+    //             ],
+    //             ['status' => $item['status']]
+    //         );
+    //     }
+
+    //     return response()->json(['message' => 'Absensi disimpan']);
+    // }
     public function store(Request $request)
     {
         foreach ($request->absensi as $item) {
+            // Cari santri_id berdasarkan NIS
+            $santri = \DB::table('santris')->where('nis', $item['nis'])->first();
+            if (!$santri) continue; // skip jika NIS tidak ditemukan
+
             Absensi::updateOrCreate(
                 [
-                    'santri_id' => $item['santri_id'],
+                    'santri_id' => $santri->id,
                     'jadwal_id' => $item['jadwal_id'],
                     'tanggal' => date('Y-m-d'),
                 ],
@@ -33,7 +52,7 @@ class AbsensiController extends Controller
                 \DB::raw("SUM(CASE WHEN status = 'hadir' THEN 1 ELSE 0 END) as hadir"),
                 \DB::raw("SUM(CASE WHEN status = 'izin' THEN 1 ELSE 0 END) as izin"),
                 \DB::raw("SUM(CASE WHEN status = 'sakit' THEN 1 ELSE 0 END) as sakit"),
-                \DB::raw("SUM(CASE WHEN status = 'alfa' THEN 1 ELSE 0 END) as alfa")
+                \DB::raw("SUM(CASE WHEN status = 'alpha' THEN 1 ELSE 0 END) as alpha")
             )
             ->where('tanggal', $tanggal)
             ->groupBy('jadwals.id', 'jadwals.kegiatan', 'jadwals.waktu')

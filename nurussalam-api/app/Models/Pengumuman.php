@@ -1,19 +1,15 @@
 <?php
 
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Pengumuman extends Model
 {
-    public function up()
-{
-    Schema::create('pengumumen', function (Blueprint $table) {
-        $table->id();
-        $table->string('judul');
-        $table->text('isi');
-        $table->timestamps();
-    });
-}
+    // Jika nama tabel sudah benar (pengumuman), baris ini boleh dihapus
+    protected $table = 'pengumuman';
 
+    // Jika ingin mass assignment
+    protected $fillable = ['judul', 'isi'];
 }

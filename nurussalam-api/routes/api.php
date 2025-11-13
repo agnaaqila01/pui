@@ -8,7 +8,7 @@ Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
 // di routes/api.php
 Route::post('/login', [AuthController::class, 'loginSantri']);
 Route::get('/absensi/santri/{id}', [AbsensiController::class, 'showBySantri']);
-
+Route::get('/absensi', [AbsensiController::class, 'index']);
 
 use App\Http\Controllers\JadwalController;
 
@@ -27,7 +27,9 @@ Route::delete('/santri/{id}', [SantriController::class, 'destroy']);
 use App\Http\Controllers\AbsensiController;
 
 Route::post('/absensi', [AbsensiController::class, 'store']);
-Route::get('/absensi/today', [AbsensiController::class, 'rekapHariIni']);
+Route::get('/absensi/rekap', [AbsensiController::class, 'rekapHariIni']);
+Route::get('/absensi/santri/{id}', [AbsensiController::class, 'showBySantri']);
+
 
 use App\Http\Controllers\DashboardController;
 
@@ -38,3 +40,6 @@ use App\Http\Controllers\PengumumanController;
 Route::get('/pengumuman', [PengumumanController::class, 'index']);
 Route::post('/pengumuman', [PengumumanController::class, 'store']);
 Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy']);
+
+
+Route::post('/santri/import', [SantriController::class, 'import'])->middleware('auth:api');

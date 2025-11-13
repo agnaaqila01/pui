@@ -2,45 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class AbsensiPage extends StatefulWidget {
-  final int santriId;
-  const AbsensiPage({super.key, required this.santriId});
+class JadwalPage extends StatefulWidget {
+  const JadwalPage({super.key});
 
   @override
-  State<AbsensiPage> createState() => _AbsensiPageState();
+  State<JadwalPage> createState() => _JadwalPageState();
 }
 
-class _AbsensiPageState extends State<AbsensiPage> {
+class _JadwalPageState extends State<JadwalPage> {
+  List jadwal = [];
   bool isLoading = true;
-  List absensi = [];
 
   @override
   void initState() {
     super.initState();
-    fetchAbsensi();
+    fetchJadwal();
   }
 
-  Future<void> fetchAbsensi() async {
+  Future<void> fetchJadwal() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://10.0.2.2:8000/api/absensi/santri/${widget.santriId}'));
-
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/api/jadwal'),
+      );
       if (response.statusCode == 200) {
         setState(() {
-          absensi = jsonDecode(response.body);
+          jadwal = jsonDecode(response.body);
           isLoading = false;
         });
       } else {
-        setState(() {
-          isLoading = false;
-        });
-        print('Gagal mengambil data absensi');
+        throw Exception('Gagal mengambil data');
       }
     } catch (e) {
       setState(() {
         isLoading = false;
       });
-      print('Error: $e');
+      print('Error fetch: $e');
     }
   }
 
@@ -49,7 +45,7 @@ class _AbsensiPageState extends State<AbsensiPage> {
     return Scaffold(
       backgroundColor: const Color(0xFF181C24),
       appBar: AppBar(
-        title: Text("Riwayat Absensi"),
+        title: Text("Jadwal Kegiatan"),
         backgroundColor: const Color(0xFF232A34),
         elevation: 8,
         shadowColor: Colors.black45,
@@ -64,48 +60,50 @@ class _AbsensiPageState extends State<AbsensiPage> {
         ),
         child: isLoading
             ? Center(child: CircularProgressIndicator(color: Colors.white))
-            : absensi.isEmpty
+            : jadwal.isEmpty
                 ? Center(
                     child: Text(
-                      "Belum ada data absensi",
+                      "Belum ada jadwal.",
                       style: TextStyle(color: Colors.white70),
                     ),
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.all(12),
-                    itemCount: absensi.length,
+                    padding: const EdgeInsets.all(16),
+                    itemCount: jadwal.length,
                     itemBuilder: (context, index) {
-                      final item = absensi[index];
-                      final isHadir = item['status'].toString().toLowerCase() == 'hadir';
+                      final item = jadwal[index];
                       return Card(
                         color: const Color(0xFF232A34),
-                        elevation: 5,
-                        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                        elevation: 6,
+                        margin: EdgeInsets.only(bottom: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: ListTile(
                           leading: CircleAvatar(
+                            backgroundColor:
+                                Color(0xFF2980B9).withOpacity(0.25),
                             radius: 28,
-                            backgroundColor: isHadir ? Colors.green[900] : Colors.red[900],
-                            child: Icon(
-                              isHadir ? Icons.check_circle : Icons.cancel,
-                              color: Colors.white,
-                              size: 32,
-                            ),
+                            child: Icon(Icons.event_note,
+                                color: Color(0xFF74ebd5), size: 32),
                           ),
                           title: Text(
-                            item['jadwal']['kegiatan'],
+                            item['kegiatan'],
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
+                              fontSize: 18,
                               color: Colors.white,
                             ),
                           ),
-                          subtitle: Text(
-                            "${item['tanggal']} - ${item['status'].toUpperCase()}",
-                            style: TextStyle(
-                              color: isHadir ? Colors.green[200] : Colors.red[200],
-                              fontWeight: FontWeight.w500,
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              "${item['hari'] != null && item['hari'].toString().isNotEmpty ? item['hari'] : '-'}, "
+                              "Jam: ${item['waktu'] != null && item['waktu'].toString().isNotEmpty ? item['waktu'] : '-'}",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey[300],
+                              ),
                             ),
                           ),
                         ),

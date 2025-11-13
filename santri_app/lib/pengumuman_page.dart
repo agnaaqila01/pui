@@ -44,31 +44,68 @@ class _PengumumanPageState extends State<PengumumanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF181C24),
       appBar: AppBar(
         title: Text("Pengumuman"),
+        backgroundColor: const Color(0xFF232A34),
+        elevation: 8,
+        shadowColor: Colors.black45,
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : pengumuman.isEmpty
-              ? Center(child: Text("Belum ada pengumuman."))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: pengumuman.length,
-                  itemBuilder: (context, index) {
-                    final item = pengumuman[index];
-                    return Card(
-                      margin: EdgeInsets.only(bottom: 12),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      child: ListTile(
-                        leading: Icon(Icons.campaign, color: Color(0xFF2980B9)),
-                        title: Text(item['judul'],
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text(item['isi']),
-                      ),
-                    );
-                  },
-                ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF232A34), Color(0xFF181C24)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: isLoading
+            ? Center(child: CircularProgressIndicator(color: Colors.white))
+            : pengumuman.isEmpty
+                ? Center(
+                    child: Text(
+                      "Belum ada pengumuman.",
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: pengumuman.length,
+                    itemBuilder: (context, index) {
+                      final item = pengumuman[index];
+                      return Card(
+                        color: const Color(0xFF232A34),
+                        elevation: 6,
+                        margin: EdgeInsets.only(bottom: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Color(0xFF2980B9).withOpacity(0.18),
+                            radius: 28,
+                            child: Icon(Icons.campaign, color: Color(0xFF74ebd5), size: 32),
+                          ),
+                          title: Text(
+                            item['judul'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              item['isi'],
+                              style: TextStyle(fontSize: 15, color: Colors.grey[300]),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+      ),
     );
   }
 }

@@ -36,12 +36,16 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
     ],
-
+    'api' => [
+        'driver' => 'token', // atau 'sanctum' atau 'passport' sesuai kebutuhan
+        'provider' => 'users',
+        'hash' => false,
+    ],
+],
     /*
     |--------------------------------------------------------------------------
     | User Providers

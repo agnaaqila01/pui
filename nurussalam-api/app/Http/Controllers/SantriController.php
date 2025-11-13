@@ -52,4 +52,35 @@ class SantriController extends Controller
 
         return response()->json(['message' => 'Santri dihapus']);
     }
+    public function index()
+    {
+        return response()->json(\App\Models\Santri::all());
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'data' => 'required|array',
+            'data.*.nis' => 'required',
+            'data.*.nama' => 'required',
+            'data.*.kelas' => 'required',
+        ]);
+
+        foreach ($request->data as $row) {
+            // Update jika NIS sudah ada, insert jika belum
+            Santri::updateOrCreate(
+                ['nis' => $row['nis']],
+                [
+                    'nama' => $row['nama'],
+                    'kelas' => $row['kelas'],
+                    'alamat' => $row['alamat'] ?? '',
+                    'password' => isset($row['password']) && $row['password'] ? \Hash::make($row['password']) : \Hash::make('santri123'),
+                ]
+            );
+        }
+
+        return response()->json(['message' => 'Import data santri berhasil']);
+    }
+
+    
 }

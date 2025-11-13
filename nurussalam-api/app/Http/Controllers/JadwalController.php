@@ -9,7 +9,7 @@ class JadwalController extends Controller
 {
     public function index()
     {
-        return Jadwal::all();
+        return \App\Models\Jadwal::all();;
     }
 
     public function store(Request $request)

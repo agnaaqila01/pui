@@ -16,7 +16,7 @@ return new class extends Migration
     $table->foreignId('santri_id')->constrained()->onDelete('cascade');
     $table->foreignId('jadwal_id')->constrained()->onDelete('cascade');
     $table->date('tanggal');
-    $table->enum('status', ['hadir', 'izin', 'sakit', 'alfa']);
+    $table->enum('status', ['hadir', 'izin', 'sakit', 'alpha']);
     $table->timestamps();
 });
 
