@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::table('pengumuman', function (Blueprint $table) {
-        $table->timestamps();
-    });
+        Schema::table('jadwals', function (Blueprint $table) {
+            $table->string('kelas')->after('id')->nullable();
+        });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pengumuman', function (Blueprint $table) {
-            //
+        Schema::table('jadwals', function (Blueprint $table) {
+            $table->dropColumn('kelas');
         });
     }
 };

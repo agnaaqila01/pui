@@ -36,16 +36,17 @@ return [
     */
 
     'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'admins', // Changed from users to admins
+        ],
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+            'hash' => false,
+        ],
     ],
-    'api' => [
-        'driver' => 'token', // atau 'sanctum' atau 'passport' sesuai kebutuhan
-        'provider' => 'users',
-        'hash' => false,
-    ],
-],
+
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -69,10 +70,10 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
     ],
 
     /*
